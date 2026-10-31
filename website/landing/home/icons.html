@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <style>@layer theme, base, site, components, utilities;</style>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>All 5,000 icons — Nodo Icons</title>
   <meta name="description" content="Search all 5,000 Nodo icons by name or keyword. Linear style free (MIT); nine more styles in Nodo Icons Pro." />
@@ -29,28 +30,19 @@
   <header class="nav glass on-light">
     <a class="logo" href="/" aria-label="Nodo Icons — home"><svg class="logo-mark" aria-hidden="true" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="nav-nwc"><rect x="0" y="20" width="120" height="36"/></clipPath></defs><rect width="120" height="120" rx="28" fill="#ffffff"/><g fill="#000000"><path d="M24 53.4L24 22.6A2.6 2.6 0 0 1 26.6 20L32 20A2.6 2.6 0 0 1 34.6 22.6L34.6 53.4A2.6 2.6 0 0 1 32 56L26.6 56A2.6 2.6 0 0 1 24 53.4Z"/><path d="M42.4 53.4L42.4 22.6A2.6 2.6 0 0 1 45 20L50.4 20A2.6 2.6 0 0 1 53 22.6L53 53.4A2.6 2.6 0 0 1 50.4 56L45 56A2.6 2.6 0 0 1 42.4 53.4Z"/><path d="M35.2 20.93L51.1 49.97A2.6 2.6 0 0 1 50.07 53.5L45.33 56.1A2.6 2.6 0 0 1 41.8 55.07L25.9 26.03A2.6 2.6 0 0 1 26.93 22.5L31.67 19.9A2.6 2.6 0 0 1 35.2 20.93Z" clip-path="url(#nav-nwc)"/><circle cx="77.5" cy="38" r="13.3" fill="none" stroke="#000000" stroke-width="10.6"/><path fill-rule="evenodd" d="M26.6 64H35A18 18 0 0 1 35 100H26.6A2.6 2.6 0 0 1 24 97.4V66.6A2.6 2.6 0 0 1 26.6 64ZM34.6 74.6V89.4H35A7.4 7.4 0 0 0 35 74.6Z"/><circle cx="77.5" cy="82" r="13.3" fill="none" stroke="#000000" stroke-width="10.6"/></g></svg></a>
     <nav><a href="/#showcase">Showcase</a><a href="/#components">Components</a><a href="/docs/">Docs</a><a href="/#pricing">Pricing</a></nav>
-    <a class="pill pill-white" href="/#pricing">Early access</a>
+    <a data-button="inverse:pill-sm" class="nav-cta" href="/#pricing">Early access</a>
   </header>
   <main class="sec browse full" id="icons">
     <div class="sec-head">
       <h2>All icons. <span class="dim">Search by name.</span></h2>
       <p>5,000 icons on a 24×24 grid. Linear is free (MIT); the other nine styles are Nodo Icons Pro.</p>
     </div>
-    <div class="br-bar">
-      <label class="br-search"><span data-ic="search" aria-hidden="true"></span><input id="br-q" type="search" placeholder="Search icons — e.g. trash, credit card, cloud rain" autocomplete="off" autofocus /></label>
-      <select id="br-cat" aria-label="Category"><option value="">All categories</option></select>
-    </div>
-    <div class="br-styles" id="br-styles" role="group" aria-label="Icon style"></div>
-    <p class="br-count mono" id="br-count"></p>
-    <div class="br-grid" id="br-grid"></div>
-    <p class="br-empty" id="br-empty" hidden>No icons match. Try another word.</p>
-    <div class="br-foot"><a class="pill pill-ghost" id="br-more" href="#" hidden>Show more</a></div>
+    <div id="browse-root"></div>
   </main>
   <script type="module">
-    import { hydrate } from '../shared/icons.js';
-    import { initBrowse } from './browse.js';
-    hydrate();
-    initBrowse(document.querySelector('#icons'), { full: true });
+    import { mountButtons, mountBrowse } from '../react/islands.jsx';
+    mountButtons();
+    mountBrowse(document.querySelector('#browse-root'), { full: true });
   </script>
 </body>
 </html>

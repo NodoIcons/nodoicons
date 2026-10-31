@@ -1,0 +1,87 @@
+/* shadcn/ui + Tailwind for the landing's controls (React islands in react/). The rest of the page keeps
+   its own CSS (d/style.css), which is unlayered and so wins over Tailwind's layers where both apply. */
+@import "tailwindcss" source(none);
+@source "./";
+@import "tw-animate-css";
+@import "./shadcn-tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Inter Tight', system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --color-brand: var(--brand);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Theme tuned to the landing: ink #1d1d1f, Apple-grey surfaces, blue #0a84ff for focus and calls to action. */
+:root {
+  --background: #ffffff;
+  --foreground: #1d1d1f;
+  --card: #f4f4f5;
+  --card-foreground: #1d1d1f;
+  --popover: #ffffff;
+  --popover-foreground: #1d1d1f;
+  --primary: #1d1d1f;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f7;
+  --secondary-foreground: #1d1d1f;
+  --muted: #f5f5f7;
+  --muted-foreground: #6e6e73;
+  --accent: #ececf0;
+  --accent-foreground: #1d1d1f;
+  --destructive: #e5484d;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #0a84ff;
+  --brand: #0a84ff;
+  --radius: 0.75rem;
+}
+.dark {
+  --background: #18181b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --accent: #3f3f46;
+  --accent-foreground: #fafafa;
+  --border: rgb(255 255 255 / 10%);
+  --input: rgb(255 255 255 / 15%);
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  button:not(:disabled), [role="button"]:not(:disabled) { cursor: pointer; }
+}

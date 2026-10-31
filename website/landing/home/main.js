@@ -1,6 +1,6 @@
 import { KIT, STYLE_INFO, fmt, icon, hydrate, swapStyle } from '../shared/icons.js';
 import { reveal, reduceMotion } from '../shared/scroll.js';
-import { initBrowse } from './browse.js';
+import { mountButtons, mountBrowse, mountShowcase, mountPlans, mountNotify } from '../react/islands.jsx';
 import { phone, desktop } from '../shared/mockups.js';
 import { dropdown, command, notifications, toolbar, toasts, glassBar, glassScene, sidebarApp, dashboard, settingsForm } from '../shared/ui.js';
 
@@ -11,6 +11,7 @@ const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const mob = () => innerWidth < 760;
 const KITV = { ...KIT, 'styles-n': KIT.styles.length };
 for (const el of document.querySelectorAll('[data-kit]')) el.textContent = fmt(KITV[el.dataset.kit]);
+mountButtons(); // shadcn Buttons before the hero is measured
 
 // Deterministic shuffle so the walls look varied but stable between reloads.
 const FAV = ['home', 'search', 'bell', 'heart', 'camera', 'wallet', 'chat', 'calendar', 'lock', 'cloud', 'music', 'map', 'sparkles', 'user',
@@ -127,6 +128,7 @@ const TABS = [
 ];
 const stage = $('#show-stage'), tile = $('#show-tile');
 let hl = null, tabTimer = null, current = 0;
+let controls = null; // React showcase controls, mounted below
 // Small tooltip naming the icon in the highlighted row (same as the bento tiles).
 function tipFor(host) {
   const tip = document.createElement('span');
@@ -158,27 +160,24 @@ function showTab(i, user = false) {
   stage.innerHTML = `<div class="comp comp-${t.id}">${t.html()}</div>`;
   hydrate(stage);
   fitStage();
-  document.querySelectorAll('#show-tabs button').forEach((b, k) => b.classList.toggle('on', k === i));
+  controls?.({ tab: i });
   hl?.stop();
   hl = highlighter(stage, { selector: t.sel || '[data-item]', every: 1700, onMove: showTip });
   if (user) { clearInterval(tabTimer); tabTimer = null; }
 }
-$('#show-tabs').innerHTML = TABS.map((t) => `<button role="tab">${t.label}</button>`).join('');
-$('#show-tabs').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) showTab([...b.parentNode.children].indexOf(b), true); });
 showTab(innerWidth < 760 ? 3 : 0);
 if (!reduceMotion) tabTimer = setInterval(() => { if (tile.getBoundingClientRect().top < innerHeight && tile.getBoundingClientRect().bottom > 0) showTab((current + 1) % TABS.length); }, 9000);
 addEventListener('resize', fitStage);
 
 // style switch: applies to the showcase and to every bento tile
 const SEG = ['linear', 'sharp', 'duotone', 'bulk', 'solid', 'light'];
-$('#style-seg').innerHTML = SEG.map((s) => `<button data-s="${s}" class="${s === 'linear' ? 'on' : ''}">${STYLE_INFO[s].label}</button>`).join('');
-$('#style-seg').addEventListener('click', (e) => {
-  const s = e.target.closest('button')?.dataset.s;
-  if (!s) return;
+const setStyle = (s) => {
   swapStyle(stage, s);
   swapStyle($('#bento'), s, { stagger: 4, max: 300 });
-  document.querySelectorAll('#style-seg button').forEach((b) => b.classList.toggle('on', b.dataset.s === s));
-});
+  controls({ style: s });
+};
+// shadcn Tabs + ToggleGroup (react/showcase-controls.jsx)
+controls = mountShowcase($('#show-bar'), { tabs: TABS, tab: current, styles: SEG, style: 'linear', onTab: (i) => showTab(i, true), onStyle: setStyle });
 
 // ── 4 · Bento ────────────────────────────────────────────
 $('#b-menu-l').innerHTML = dropdown();
@@ -203,40 +202,9 @@ hydrate($('#bento'));
 // Each component tile walks through its rows; a small tooltip names the icon under focus.
 document.querySelectorAll('#bento .cyc').forEach((t) => highlighter(t, { every: 1400 + Math.random() * 600, onMove: tipFor(t) }));
 
-// Pro is sold in blocks of 10 people ($49 each in early access, then $99). Past 50 people Enterprise ($499) is cheaper.
-let blocks = 1;
-const renderSeats = () => {
-  $('#seat-label').textContent = `${(blocks - 1) * 10 + 1}–${blocks * 10} people`;
-  $('#pro-price').textContent = `$${49 * blocks}`;
-  $('#pro-then').textContent = `then $${99 * blocks}`;
-  $('#seat-minus').disabled = blocks === 1;
-  $('#seat-plus').disabled = blocks === 5;
-};
-$('#seat-minus').addEventListener('click', () => { blocks = Math.max(1, blocks - 1); renderSeats(); });
-$('#seat-plus').addEventListener('click', () => { blocks = Math.min(5, blocks + 1); renderSeats(); });
-renderSeats();
-
-// Early-access notify form. Until an email service is connected, it opens a pre-filled email to
-// hello@nodoicons.com (nothing is stored by the page). Set NOTIFY_ENDPOINT to post to a form service instead.
-const NOTIFY_ENDPOINT = '';
-$('#notify').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const input = e.target.querySelector('input');
-  const email = input.value.trim();
-  if (NOTIFY_ENDPOINT) {
-    try {
-      await fetch(NOTIFY_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
-      $('#notify-ok').textContent = `Thanks — we'll write to ${email}.`;
-      input.value = '';
-    } catch { $('#notify-ok').textContent = 'Something went wrong — write to hello@nodoicons.com.'; }
-    return;
-  }
-  location.href = `mailto:hello@nodoicons.com?subject=${encodeURIComponent('Nodo Icons early access')}&body=${encodeURIComponent(`Please notify ${email} when early access opens.`)}`;
-  $('#notify-ok').textContent = 'Your email app opened a message to hello@nodoicons.com — send it and you are on the list.';
-});
-// Checkout links: filled in once the Lemon Squeezy products exist; until then they lead to the form.
-const CHECKOUT = { pro: '', enterprise: '' };
-document.querySelectorAll('[data-checkout]').forEach((a) => { if (CHECKOUT[a.dataset.checkout]) a.href = CHECKOUT[a.dataset.checkout]; });
+// Pricing cards and the early-access form: shadcn Card / Button / Input (react/pricing.jsx).
+mountPlans($('#plans-root'), { count: KIT.count });
+mountNotify($('#notify-root'));
 
 // Nav switches to light glass over light sections.
 const lightSecs = [...document.querySelectorAll('[data-nav="light"]')];
@@ -249,5 +217,5 @@ addEventListener('scroll', navTheme, { passive: true });
 navTheme();
 
 hydrate();
-initBrowse(document.querySelector('#icons'));
+mountBrowse($('#browse-root'));
 reveal();

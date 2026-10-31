@@ -16,7 +16,7 @@ execFileSync(process.execPath, [join(ROOT, 'website/site/build.mjs')], {
 
 // the landing becomes the home page
 await build({
-  configFile: false, root: join(ROOT, 'website/landing'), base: '/', publicDir: false, logLevel: 'warn',
+  configFile: join(ROOT, 'website/landing/vite.config.js'), root: join(ROOT, 'website/landing'), base: '/', logLevel: 'warn',
   build: {
     outDir: OUT,
     emptyOutDir: false,

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <style>@layer theme, base, site, components, utilities;</style>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Nodo Icons — 5,000 UI icons in 10 styles</title>
   <meta name="description" content="5,000 UI icons in 10 styles for React, Vue, SVG, Figma and AI agents. Linear style free (MIT). Pro: pay once, free updates forever." />
@@ -38,7 +39,7 @@
   <header class="nav glass">
     <a class="logo" href="/" aria-label="Nodo Icons — home"><svg class="logo-mark" aria-hidden="true" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="nav-nwc"><rect x="0" y="20" width="120" height="36"/></clipPath></defs><rect width="120" height="120" rx="28" fill="#ffffff"/><g fill="#000000"><path d="M24 53.4L24 22.6A2.6 2.6 0 0 1 26.6 20L32 20A2.6 2.6 0 0 1 34.6 22.6L34.6 53.4A2.6 2.6 0 0 1 32 56L26.6 56A2.6 2.6 0 0 1 24 53.4Z"/><path d="M42.4 53.4L42.4 22.6A2.6 2.6 0 0 1 45 20L50.4 20A2.6 2.6 0 0 1 53 22.6L53 53.4A2.6 2.6 0 0 1 50.4 56L45 56A2.6 2.6 0 0 1 42.4 53.4Z"/><path d="M35.2 20.93L51.1 49.97A2.6 2.6 0 0 1 50.07 53.5L45.33 56.1A2.6 2.6 0 0 1 41.8 55.07L25.9 26.03A2.6 2.6 0 0 1 26.93 22.5L31.67 19.9A2.6 2.6 0 0 1 35.2 20.93Z" clip-path="url(#nav-nwc)"/><circle cx="77.5" cy="38" r="13.3" fill="none" stroke="#000000" stroke-width="10.6"/><path fill-rule="evenodd" d="M26.6 64H35A18 18 0 0 1 35 100H26.6A2.6 2.6 0 0 1 24 97.4V66.6A2.6 2.6 0 0 1 26.6 64ZM34.6 74.6V89.4H35A7.4 7.4 0 0 0 35 74.6Z"/><circle cx="77.5" cy="82" r="13.3" fill="none" stroke="#000000" stroke-width="10.6"/></g></svg></a>
     <nav><a href="#showcase">Showcase</a><a href="#components">Components</a><a href="/docs/">Docs</a><a href="#pricing">Pricing</a></nav>
-    <a class="pill pill-white" href="#pricing">Early access</a>
+    <a data-button="inverse:pill-sm" class="nav-cta" href="#pricing">Early access</a>
   </header>
 
   <!-- 1 · Hero: headline in the middle, concentric rings of flat icons; a few light up in turn -->
@@ -49,7 +50,7 @@
       <p class="mono eyebrow dark"><span data-kit="count"></span> icons · <span data-kit="styles-n"></span> styles · <span data-kit="variants"></span> variants</p>
       <h1>Icons, in a<br />new light.</h1>
       <p class="lede dark">One grid. Ten styles. Made for glass, made for every screen.</p>
-      <div class="cta"><a class="pill pill-dark" href="#pricing">Get early access — $49</a><a class="pill pill-ghost" href="#showcase">See it in use</a></div>
+      <div class="cta"><a data-button="default" href="#pricing">Get early access — $49</a><a data-button="secondary" href="#showcase">See it in use</a></div>
     </div>
   </section>
 
@@ -62,15 +63,7 @@
       <h2>Every icon. <span class="dim">One search away.</span></h2>
       <p>All 5,000 icons, searchable by name or keyword. Linear is free; the other nine styles are Pro.</p>
     </div>
-    <div class="br-bar">
-      <label class="br-search"><span data-ic="search" aria-hidden="true"></span><input id="br-q" type="search" placeholder="Search icons — e.g. trash, credit card, cloud rain" autocomplete="off" /></label>
-      <select id="br-cat" aria-label="Category"><option value="">All categories</option></select>
-    </div>
-    <div class="br-styles" id="br-styles" role="group" aria-label="Icon style"></div>
-    <p class="br-count mono" id="br-count"></p>
-    <div class="br-grid" id="br-grid"></div>
-    <p class="br-empty" id="br-empty" hidden>No icons match. Try another word.</p>
-    <div class="br-foot"><a class="pill pill-ghost" id="br-more" href="/icons/" hidden>See all icons</a></div>
+    <div id="browse-root"></div>
   </section>
 
   <!-- 3 · Showcase: whole interfaces, a tooltip names the icon in focus -->
@@ -83,10 +76,7 @@
       <div class="tile show-tile" id="show-tile">
         <div class="show-stage ui" id="show-stage" data-style="linear"></div>
       </div>
-      <div class="show-bar">
-        <div class="chips" id="show-tabs" role="tablist"></div>
-        <div class="seg" id="style-seg" aria-label="Icon style"></div>
-      </div>
+      <div class="show-bar" id="show-bar"></div>
     </div>
   </section>
 
@@ -116,39 +106,8 @@
       <h2>Pay once. <span class="dim">Keep it forever.</span></h2>
       <p>One price for every 10 people, paid once. Early-access pricing runs for the first 30 days after launch, and every future update — Figma plugin, new packages, new icons — is included, forever.</p>
     </div>
-    <div class="plans">
-      <article class="plan">
-        <p class="mono">Free</p>
-        <div class="price"><b>$0</b><span class="then">MIT license</span></div>
-        <p>The Linear style, free forever.</p>
-        <ul class="incl"><li>All <span data-kit="count"></span> icons in Linear</li><li>SVG + React &amp; Vue packages</li><li>Use anywhere, no attribution</li></ul>
-        <a class="pill pill-ghost" href="/docs/">Coming at launch</a>
-      </article>
-      <article class="plan hot">
-        <p class="mono">Pro <span class="tag">Early access</span></p>
-        <div class="price"><b id="pro-price">$49</b><span class="then" id="pro-then">then $99</span></div>
-        <div class="seats" role="group" aria-label="Team size">
-          <button type="button" id="seat-minus" aria-label="Fewer people">−</button>
-          <span id="seat-label">1–10 people</span>
-          <button type="button" id="seat-plus" aria-label="More people">+</button>
-        </div>
-        <ul class="incl"><li>All 10 styles, every format</li><li>React &amp; Vue packages</li><li>Commercial &amp; client work</li><li>Free updates, forever</li></ul>
-        <a class="pill pill-blue" href="#notify" data-checkout="pro">Get early access</a>
-      </article>
-      <article class="plan">
-        <p class="mono">Enterprise</p>
-        <div class="price"><b>$499</b><span class="then">one-time</span></div>
-        <p>Your whole company, unlimited people.</p>
-        <ul class="incl"><li>Everything in Pro</li><li>Unlimited people</li><li>Extended license: templates &amp; UI kits</li><li>Invoice, procurement, custom icons</li></ul>
-        <a class="pill pill-dark" href="mailto:enterprise@nodoicons.com?subject=Nodo%20Icons%20Enterprise">Buy Enterprise</a>
-      </article>
-    </div>
-    <form class="notify" id="notify" action="mailto:hello@nodoicons.com" method="post" enctype="text/plain">
-      <div><b>Early access opens soon.</b><span>Leave your email: we write once when checkout opens, and once before early access ends.</span></div>
-      <label class="notify-field"><span data-ic="mail"></span><input type="email" required placeholder="you@company.com" aria-label="Email" /></label>
-      <button class="pill pill-dark" type="submit">Notify me</button>
-      <p class="notify-ok" id="notify-ok" role="status"></p>
-    </form>
+    <div id="plans-root"></div>
+    <div id="notify-root"></div>
     <p class="mono placeholder-note">Prices in USD, taxes calculated at checkout. Questions: <a href="mailto:hello@nodoicons.com">hello@nodoicons.com</a></p>
   </section>
 
