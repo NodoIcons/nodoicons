@@ -17,7 +17,7 @@ const LICENSES = process.env.LICENSES_DIR ? resolve(process.env.LICENSES_DIR) : 
 const OUT = process.env.OUT_DIR ? resolve(process.env.OUT_DIR) : join(import.meta.dirname, '../out/site');
 const ICONS = process.env.ICONS !== '0';
 const SITE = (process.env.SITE_URL || 'https://nodoicons.com').replace(/\/$/, '');
-const LS_STORE = process.env.LS_STORE || '';
+const LS_STORE = process.env.LS_STORE ?? 'nodoicons';
 const PRICING = '/#pricing';
 const FREE = 'linear';
 const PRO_STYLES = STYLES.filter((s) => s !== FREE);
@@ -58,7 +58,7 @@ function layout({ path, pageTitle, description, body, jsonld = '', mdAlt = '' })
 ${jsonld}${affiliate}
 </head>
 <body>
-<header class="top"><a class="logo" href="/"><img src="/assets/favicon.svg" width="24" height="24" alt="" />Nodo Icons</a><nav>${ICONS ? '<a href="/icons/">Icons</a>' : ''}<a href="/docs/">Docs</a><a href="${PRICING}">Pricing</a></nav><a class="btn dark" href="${PRICING}">Early access</a></header>
+<header class="top"><a class="logo" href="/" aria-label="Nodo Icons — home"><img src="/assets/favicon.svg" width="30" height="30" alt="" /></a><nav>${ICONS ? '<a href="/icons/">Icons</a>' : ''}<a href="/docs/">Docs</a><a href="${PRICING}">Pricing</a></nav><a class="btn dark" href="${PRICING}">Early access</a></header>
 <main>${body}</main>
 <footer class="foot"><span>Nodo Icons · ${COUNT.toLocaleString('en-US')} icons × ${STYLES.length} styles · <a href="mailto:hello@nodoicons.com">hello@nodoicons.com</a> · <a href="mailto:support@nodoicons.com">Support</a></span><span><a href="/license/free/">Linear: MIT</a> · <a href="/license/pro/">Pro license</a> · <a href="/terms/">Terms</a> · <a href="/refunds/">Refunds</a> · <a href="/privacy/">Privacy</a></span></footer>
 <script src="/assets/site.js" defer></script>

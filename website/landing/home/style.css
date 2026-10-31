@@ -59,7 +59,7 @@ h2 { font-size: clamp(40px, 5.4vw, 80px); }
 
 .nav { position: fixed; z-index: 30; top: 12px; left: 50%; translate: -50% 0; width: min(980px, calc(100% - 24px)); display: flex; align-items: center; gap: 20px; padding: 7px 7px 7px 10px; border-radius: 99px; background: linear-gradient(180deg, rgba(40, 40, 52, 0.42), rgba(20, 20, 28, 0.3)); }
 .logo { display: flex; align-items: center; gap: 9px; font-weight: 600; letter-spacing: -0.02em; }
-.logo-mark { width: 30px; height: 30px; flex: none; }
+.logo-mark { width: 34px; height: 34px; flex: none; display: block; }
 .nav nav { display: flex; gap: 22px; margin-left: auto; font-size: 14px; color: rgba(255, 255, 255, 0.78); }
 .nav nav a:hover { color: #fff; }
 .nav .pill { padding: 8px 16px; font-size: 14px; }
