@@ -20,6 +20,9 @@ const SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256, 512];
 const TABS = [['react', 'React'], ['vue', 'Vue'], ['svg', 'SVG'], ['sprite', 'Sprite'], ['font', 'Icon font'], ['ai', 'AI agents']];
 const title = (s) => s[0].toUpperCase() + s.slice(1);
 
+// Pro packages come from the Nodo Icons registry with the license key (docs: "Nodo Icons Pro in React and Vue")
+const PRO_SETUP = (fw) => `# .npmrc — license key from your receipt, in the NODO_LICENSE_KEY env variable\n@nodo-icons:registry=https://nodoicons.com/npm/\n//nodoicons.com/npm/:_authToken=\${NODO_LICENSE_KEY}\n\nnpm install @nodo-icons/${fw}-pro\n\n`;
+
 function snippets(item, style, { size, color, stroke, svg }) {
   const pro = style !== FREE;
   const c = componentName(item.name), n = item.name;
@@ -29,8 +32,8 @@ function snippets(item, style, { size, color, stroke, svg }) {
   const vueProps = [`:size="${size}"`, color && `color="${color}"`, sw && `:stroke-width="${stroke}"`].filter(Boolean).join(' ');
   const from = (what) => (pro ? `${what} from your Pro download` : `${what} from @nodo-icons/static`);
   return {
-    react: `${pro ? '' : 'npm install @nodo-icons/react\n\n'}import { ${c} } from '${pkg('react')}';\n\n<${c} ${reactProps} />`,
-    vue: `${pro ? '' : 'npm install @nodo-icons/vue\n\n'}<script setup>\nimport { ${c} } from '${pkg('vue')}';\n</script>\n\n<template>\n  <${c} ${vueProps} />\n</template>`,
+    react: `${pro ? PRO_SETUP('react') : 'npm install @nodo-icons/react\n\n'}import { ${c} } from '${pkg('react')}';\n\n<${c} ${reactProps} />`,
+    vue: `${pro ? PRO_SETUP('vue') : 'npm install @nodo-icons/vue\n\n'}<script setup>\nimport { ${c} } from '${pkg('vue')}';\n</script>\n\n<template>\n  <${c} ${vueProps} />\n</template>`,
     svg: pro ? `<!-- svg/${style}/${n}.svg from your Pro download -->\n<img src="svg/${style}/${n}.svg" width="${size}" height="${size}" alt="" />` : svg,
     sprite: `<!-- ${from(`sprite/${style}.svg`)} -->\n<svg width="${size}" height="${size}"${color ? ` color="${color}"` : ''}>\n  <use href="sprite/${style}.svg#nd-${n}" />\n</svg>`,
     font: `<!-- ${from(`font/${style}/`)} -->\n<link rel="stylesheet" href="font/${style}/nodo-icons-${style}.css" />\n\n<i class="nd-${style} nd-${n}" style="font-size: ${size}px${color ? `; color: ${color}` : ''}"></i>`,

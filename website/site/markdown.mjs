@@ -20,7 +20,10 @@ export function markdown(src) {
       continue;
     }
     const h = l.match(/^(#{1,3})\s+(.*)$/);
-    if (h) { out.push(`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`); i++; continue; }
+    if (h) {
+      const id = h[1].length > 1 ? ` id="${h[2].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}"` : ''; // anchors for ## and ###
+      out.push(`<h${h[1].length}${id}>${inline(h[2])}</h${h[1].length}>`); i++; continue;
+    }
     if (l.startsWith('>')) { while (i < lines.length && lines[i].startsWith('>')) i++; continue; }
     if (l.startsWith('|')) {
       const rows = [];

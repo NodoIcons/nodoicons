@@ -23,6 +23,9 @@
       "headers": [{ "key": "Content-Type", "value": "text/markdown; charset=utf-8" }]
     }
   ],
+  "rewrites": [
+    { "source": "/npm/:path*", "destination": "/api/npm?p=:path*" }
+  ],
   "redirects": [
     {
       "source": "/:path*",

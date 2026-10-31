@@ -10,7 +10,7 @@ Nodo Icons is an icon set of 5,000 UI icons drawn on a 24×24 grid, in 10 styles
 | `@nodo-icons/vue` | 5,000 Linear icons as Vue 3 components | MIT |
 | `@nodo-icons/static` | Linear SVG, outlined SVG, SVG sprite, icon font, `icons.json` | MIT |
 | `@nodo-icons/mcp` | MCP server and CLI for AI agents | MIT |
-| `@nodo-icons/react-pro`, `@nodo-icons/vue-pro` | All 10 styles (Pro license) | Pro |
+| `@nodo-icons/react-pro`, `@nodo-icons/vue-pro` | All 10 styles, from the Nodo Icons registry with your license key ([setup](#nodo-icons-pro-in-react-and-vue)) | Pro |
 
 ```bash
 npm install @nodo-icons/react
@@ -36,6 +36,26 @@ import { HomeIcon } from '@nodo-icons/vue';
 
 <template><HomeIcon :size="20" color="#0a84ff" /></template>
 ```
+
+## Nodo Icons Pro in React and Vue
+
+`@nodo-icons/react-pro` and `@nodo-icons/vue-pro` (all 10 styles) install from the Nodo Icons registry with your license key, which is in your purchase receipt. Add an `.npmrc` next to your `package.json`:
+
+```ini
+@nodo-icons:registry=https://nodoicons.com/npm/
+//nodoicons.com/npm/:_authToken=${NODO_LICENSE_KEY}
+```
+
+```bash
+export NODO_LICENSE_KEY=your-license-key   # in CI, store it as a secret
+npm install @nodo-icons/react-pro          # or @nodo-icons/vue-pro
+```
+
+```jsx
+import { HomeIcon } from '@nodo-icons/react-pro/duotone';
+```
+
+Each style is its own entry point (`/linear`, `/light`, `/bold`, `/sharp`, `/twotone`, `/duotone`, `/bulk`, `/solid`, `/contained`, `/soft`); props are the same as the free packages. Installing doesn't use any of your license's activations, and the free `@nodo-icons/*` packages keep installing from npm through the same registry. Keep the key out of git: `${NODO_LICENSE_KEY}` reads it from the environment.
 
 ## SVG, sprite and font
 
