@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "website/dist",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.nodoicons.com" }],
+      "destination": "https://nodoicons.com/:path*",
+      "statusCode": 301
+    }
+  ]
+}
