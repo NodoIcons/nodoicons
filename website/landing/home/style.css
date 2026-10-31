@@ -163,7 +163,7 @@ body { background: #fff; color: var(--ink); }
 
 /* Pricing / early access */
 .pricing { padding: 140px 24px 100px; max-width: 1240px; margin: 0 auto; }
-.ea-badge { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 18px; padding: 6px 12px 6px 10px; border-radius: 99px; background: #eff6ff; color: #1d4ed8; font-size: 11px; }
+.ea-badge { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 18px; padding: 6px 12px 6px 10px; border-radius: 99px; background: #eff6ff; color: #1d4ed8; font-family: 'General Sans', 'Inter Tight', system-ui, sans-serif; font-weight: 600; font-size: 12px; letter-spacing: 0.05em; }
 .ea-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2); animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 50% { box-shadow: 0 0 0 6px rgba(10, 132, 255, 0); } }
 .hero-copy .ea-badge { margin-bottom: 14px; }
