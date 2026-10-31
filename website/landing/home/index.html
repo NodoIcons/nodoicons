@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nodo Icons — 5,000 UI icons in 10 styles</title>
+  <meta name="description" content="5,000 UI icons in 10 styles for React, Vue, SVG, Figma and AI agents. Linear style free (MIT). Pro: pay once, free updates forever." />
+  <link rel="alternate" type="text/markdown" href="/docs/index.md" />
+  <link rel="canonical" href="https://nodoicons.com/" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nodoicons.com/" />
+  <meta property="og:title" content="Nodo Icons — 5,000 UI icons in 10 styles" />
+  <meta property="og:description" content="React, Vue, SVG, Figma and AI agents. Linear style free (MIT). Pro: pay once, free updates forever." />
+  <meta property="og:image" content="https://nodoicons.com/assets/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "Nodo Icons", "url": "https://nodoicons.com", "email": "hello@nodoicons.com", "description": "5,000 UI icons on a 24×24 grid in 10 styles for React, Vue, SVG, Figma and AI agents. Linear style free (MIT); Pro adds nine styles, one-time purchase with free updates forever.", "brand": {"@type": "Brand", "name": "Nodo Icons"}, "category": "Icon set", "offers": [{"@type": "Offer", "name": "Pro — per 10 people (early access)", "price": "49", "priceCurrency": "USD"}, {"@type": "Offer", "name": "Enterprise — unlimited people", "price": "499", "priceCurrency": "USD"}, {"@type": "Offer", "name": "Free — Linear style (MIT)", "price": "0", "priceCurrency": "USD"}]}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared/base.css" />
+  <link rel="stylesheet" href="../shared/mockups.css" />
+  <link rel="stylesheet" href="../shared/ui.css" />
+  <link rel="stylesheet" href="./style.css" />
+  <script>
+    // Lemon Squeezy affiliate tracking: set the store slug once the store exists (Affiliate Settings in Lemon Squeezy).
+    const LS_STORE = '';
+    if (LS_STORE) {
+      window.lemonSqueezyAffiliateConfig = { store: LS_STORE };
+      const s = document.createElement('script'); s.src = 'https://lmsqueezy.com/affiliate.js'; s.defer = true; document.head.appendChild(s);
+    }
+  </script>
+</head>
+<body>
+  <header class="nav glass">
+    <a class="logo" href="/"><span class="logo-chip"><span data-ic="layers" data-style="solid"></span></span>Nodo Icons</a>
+    <nav><a href="#showcase">Showcase</a><a href="#components">Components</a><a href="/docs/">Docs</a><a href="#pricing">Pricing</a></nav>
+    <a class="pill pill-white" href="#pricing">Early access</a>
+  </header>
+
+  <!-- 1 · Hero: headline in the middle, concentric rings of flat icons; a few light up in turn -->
+  <section class="hero" id="hero" data-nav="light">
+    <div class="rings" id="rings" aria-hidden="true"></div>
+    <div class="hero-copy" id="hero-copy">
+      <a class="ea-badge mono" href="#pricing"><span class="dot"></span>Early access · $49, then $99</a>
+      <p class="mono eyebrow dark"><span data-kit="count"></span> icons · <span data-kit="styles-n"></span> styles · <span data-kit="variants"></span> variants</p>
+      <h1>Icons, in a<br />new light.</h1>
+      <p class="lede dark">One grid. Ten styles. Made for glass, made for every screen.</p>
+      <div class="cta"><a class="pill pill-dark" href="#pricing">Get early access — $49</a><a class="pill pill-ghost" href="#showcase">See it in use</a></div>
+    </div>
+  </section>
+
+  <!-- 2 · Style strip -->
+  <section class="strip" aria-label="Styles" data-nav="light"><div class="strip-track" id="strip"></div></section>
+
+  <!-- 3 · Showcase: whole interfaces, a tooltip names the icon in focus -->
+  <section class="sec" id="showcase" data-nav="light">
+    <div class="sec-head">
+      <h2>Looks right in <span class="dim">every interface.</span></h2>
+      <p>Real screens, rebuilt with Nodo icons. Switch the style and the whole UI follows.</p>
+    </div>
+    <div class="show">
+      <div class="tile show-tile" id="show-tile">
+        <div class="show-stage ui" id="show-stage" data-style="linear"></div>
+      </div>
+      <div class="show-bar">
+        <div class="chips" id="show-tabs" role="tablist"></div>
+        <div class="seg" id="style-seg" aria-label="Icon style"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Bento of components -->
+  <section class="sec" id="components" data-nav="light">
+    <div class="sec-head">
+      <h2>Every component. <span class="dim">One icon family.</span></h2>
+      <p>Menus, palettes, cards, toolbars, toasts — drawn on the same 24×24 grid, so they sit together without a second look.</p>
+    </div>
+    <div class="bento" id="bento" data-style="linear">
+      <article class="tile t6 cyc"><p class="cap mono">Dropdown menu · light</p><div class="tile-body ui" id="b-menu-l"></div></article>
+      <article class="tile t6 cyc dark-tile"><p class="cap mono">Dropdown menu · dark</p><div class="tile-body ui dark" id="b-menu-d"></div></article>
+      <article class="tile t7 cyc"><p class="cap mono">Command palette</p><div class="tile-body ui" id="b-cmd"></div></article>
+      <article class="tile t5 cyc"><p class="cap mono">Card</p><div class="tile-body ui" id="b-card"></div></article>
+      <article class="tile t12 cyc tilt-tile"><p class="cap mono">Sidebar · light &amp; dark</p><div class="tilt" id="b-sidebar"></div></article>
+      <article class="tile t4 cyc"><p class="cap mono">Toolbar &amp; buttons</p><div class="tile-body ui" id="b-tools"></div></article>
+      <article class="tile t4 cyc"><p class="cap mono">Toasts</p><div class="tile-body ui" id="b-toasts"></div></article>
+      <article class="tile t4 cyc"><p class="cap mono">Liquid glass</p><div class="tile-body ui" id="b-glass"></div></article>
+      <article class="tile t7 code-tile"><p class="cap mono">React · Vue · HTML</p><div class="tile-body" id="b-code"></div></article>
+      <article class="tile t5"><p class="cap mono">Every format</p><div class="tile-body" id="b-formats"></div></article>
+    </div>
+  </section>
+
+  <section class="pricing" id="pricing" data-nav="light">
+    <div class="sec-head">
+      <p class="ea-badge mono"><span class="dot"></span>Early access · launch pricing</p>
+      <h2>Pay once. <span class="dim">Keep it forever.</span></h2>
+      <p>One price for every 10 people, paid once. Early-access pricing runs for the first 30 days after launch, and every future update — Figma plugin, new packages, new icons — is included, forever.</p>
+    </div>
+    <div class="plans">
+      <article class="plan">
+        <p class="mono">Free</p>
+        <div class="price"><b>$0</b><span class="then">MIT license</span></div>
+        <p>The Linear style, free forever.</p>
+        <ul class="incl"><li>All <span data-kit="count"></span> icons in Linear</li><li>SVG + React &amp; Vue packages</li><li>Use anywhere, no attribution</li></ul>
+        <a class="pill pill-ghost" href="/docs/">Coming at launch</a>
+      </article>
+      <article class="plan hot">
+        <p class="mono">Pro <span class="tag">Early access</span></p>
+        <div class="price"><b id="pro-price">$49</b><span class="then" id="pro-then">then $99</span></div>
+        <div class="seats" role="group" aria-label="Team size">
+          <button type="button" id="seat-minus" aria-label="Fewer people">−</button>
+          <span id="seat-label">1–10 people</span>
+          <button type="button" id="seat-plus" aria-label="More people">+</button>
+        </div>
+        <ul class="incl"><li>All 10 styles, every format</li><li>React &amp; Vue packages</li><li>Commercial &amp; client work</li><li>Free updates, forever</li></ul>
+        <a class="pill pill-blue" href="#notify" data-checkout="pro">Get early access</a>
+      </article>
+      <article class="plan">
+        <p class="mono">Enterprise</p>
+        <div class="price"><b>$499</b><span class="then">one-time</span></div>
+        <p>Your whole company, unlimited people.</p>
+        <ul class="incl"><li>Everything in Pro</li><li>Unlimited people</li><li>Extended license: templates &amp; UI kits</li><li>Invoice, procurement, custom icons</li></ul>
+        <a class="pill pill-dark" href="mailto:enterprise@nodoicons.com?subject=Nodo%20Icons%20Enterprise">Buy Enterprise</a>
+      </article>
+    </div>
+    <form class="notify" id="notify" action="mailto:hello@nodoicons.com" method="post" enctype="text/plain">
+      <div><b>Early access opens soon.</b><span>Leave your email: we write once when checkout opens, and once before early access ends.</span></div>
+      <label class="notify-field"><span data-ic="mail"></span><input type="email" required placeholder="you@company.com" aria-label="Email" /></label>
+      <button class="pill pill-dark" type="submit">Notify me</button>
+      <p class="notify-ok" id="notify-ok" role="status"></p>
+    </form>
+    <p class="mono placeholder-note">Prices in USD, taxes calculated at checkout. Questions: <a href="mailto:hello@nodoicons.com">hello@nodoicons.com</a></p>
+  </section>
+
+  <footer class="foot mono" data-nav="light">Nodo Icons · <a href="mailto:hello@nodoicons.com">hello@nodoicons.com</a> · <a href="/docs/">Docs</a> · <a href="/license/pro/">License</a> · <a href="/terms/">Terms</a> · <a href="/refunds/">Refunds</a> · <a href="/privacy/">Privacy</a></footer>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
