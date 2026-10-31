@@ -56,6 +56,23 @@
   <!-- 2 · Style strip -->
   <section class="strip" aria-label="Styles" data-nav="light"><div class="strip-track" id="strip"></div></section>
 
+  <!-- 2b · Browse every icon: search by name, Linear free, other styles marked Pro -->
+  <section class="sec browse" id="icons" data-nav="light">
+    <div class="sec-head">
+      <h2>Every icon. <span class="dim">One search away.</span></h2>
+      <p>All 5,000 icons, searchable by name or keyword. Linear is free; the other nine styles are Pro.</p>
+    </div>
+    <div class="br-bar">
+      <label class="br-search"><span data-ic="search" aria-hidden="true"></span><input id="br-q" type="search" placeholder="Search icons — e.g. trash, credit card, cloud rain" autocomplete="off" /></label>
+      <select id="br-cat" aria-label="Category"><option value="">All categories</option></select>
+    </div>
+    <div class="br-styles" id="br-styles" role="group" aria-label="Icon style"></div>
+    <p class="br-count mono" id="br-count"></p>
+    <div class="br-grid" id="br-grid"></div>
+    <p class="br-empty" id="br-empty" hidden>No icons match. Try another word.</p>
+    <div class="br-foot"><button type="button" class="pill pill-ghost" id="br-more" hidden>Show more</button></div>
+  </section>
+
   <!-- 3 · Showcase: whole interfaces, a tooltip names the icon in focus -->
   <section class="sec" id="showcase" data-nav="light">
     <div class="sec-head">

@@ -1,5 +1,6 @@
 import { KIT, STYLE_INFO, fmt, icon, hydrate, swapStyle } from '../shared/icons.js';
 import { reveal, reduceMotion } from '../shared/scroll.js';
+import { initBrowse } from './browse.js';
 import { phone, desktop } from '../shared/mockups.js';
 import { dropdown, command, notifications, toolbar, toasts, glassBar, glassScene, sidebarApp, dashboard, settingsForm } from '../shared/ui.js';
 
@@ -248,4 +249,5 @@ addEventListener('scroll', navTheme, { passive: true });
 navTheme();
 
 hydrate();
+initBrowse(document.querySelector('#icons'));
 reveal();

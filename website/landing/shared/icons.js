@@ -10,8 +10,10 @@ export const KIT = {
   names: Object.keys(data.icons),
   variants: data.count * data.styles.length,
 };
-export { STYLE_INFO };
+export { STYLE_INFO, toSVG };
 export const fmt = (n) => n.toLocaleString('en-US');
+/** True when the page bundles this icon in this style (Pro styles: showcase icons only). */
+export const previewable = (name, style) => Boolean(data.icons[name]?.styles[style]);
 
 /** <svg class="ic"> markup for one icon in one style. Size is driven by CSS (--s, default 24px). */
 export function icon(name, style = 'linear', { strokeWidth } = {}) {
