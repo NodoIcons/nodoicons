@@ -145,6 +145,18 @@ export function Browse({ full = false }) {
           : <Button asChild variant="secondary" size="pill" className={data.status === 'ready' && more ? '' : 'invisible'}><a href={`/icons/${query(false)}`}>See all {fmt(list.length)} icons</a></Button>}
       </div>
 
+      {full && data.status === 'ready' && (
+        <nav aria-label="Icon categories" className="mt-14 border-t border-border pt-8">
+          <h3 className="mb-3 text-[13px] font-semibold text-muted-foreground">Browse by category</h3>
+          <div className="flex flex-wrap gap-1.5">
+            {data.cats.map((c) => (
+              <Button key={c} asChild variant="secondary" size="sm" className="rounded-full font-normal">
+                <a href={`/icons/c/${c}/`}>{c[0].toUpperCase() + c.slice(1)} <span className="text-muted-foreground">{data.icons.filter((i) => i.category === c).length}</span></a>
+              </Button>
+            ))}
+          </div>
+        </nav>
+      )}
       {openItem && (
         <Suspense fallback={null}>
           <IconDetail item={openItem} style={style} list={list} all={data.icons} nodes={data.nodes}

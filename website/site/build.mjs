@@ -1,8 +1,9 @@
 // SEO site: one page per icon + category pages + browse page + sitemap, from the built kit (dist/).
 //   node release/site/build.mjs            → release/out/site/
 //   SITE_URL=https://nodoicons.com LS_STORE=<lemon squeezy store slug> node release/site/build.mjs
-// Free Linear icons are inline SVG (copy / download). Pro styles are shown only as 64px PNG previews,
-// so the site never hands out Pro vectors.
+// Free Linear icons are inline SVG (copy / download). Pro styles are shown only as image previews (the
+// landing's WebP sprite sheets, see landing/scripts/sprites.mjs), so the site never hands out Pro vectors.
+// The interactive search lives at /icons/ (the landing's React page): BROWSE=0 leaves that path to it.
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { STYLE_INFO, STYLES, toSVG, componentName } from '../../lib/render.js';
@@ -16,13 +17,18 @@ const LICENSES = process.env.LICENSES_DIR ? resolve(process.env.LICENSES_DIR) : 
 // OUT_DIR: where to write (default release/out/site). ICONS=0: skip the 5,000 icon pages (pre-launch site).
 const OUT = process.env.OUT_DIR ? resolve(process.env.OUT_DIR) : join(import.meta.dirname, '../out/site');
 const ICONS = process.env.ICONS !== '0';
+const BROWSE = process.env.BROWSE !== '0';
+// SVG_DIR: the free Linear SVGs, served at /svg/linear/ (default dist/svg/linear).
+// SPRITES: the landing snapshot with the sprite manifest (default landing/data/icons.json).
+const SVG_DIR = process.env.SVG_DIR ? resolve(process.env.SVG_DIR) : join(DIST, 'svg', 'linear');
+const SPRITES = JSON.parse(readFileSync(process.env.SPRITES ? resolve(process.env.SPRITES) : join(ROOT, 'landing/data/icons.json'), 'utf8')).sprites;
 const SITE = (process.env.SITE_URL || 'https://nodoicons.com').replace(/\/$/, '');
 const LS_STORE = process.env.LS_STORE ?? 'nodoicons';
 const PRICING = '/#pricing';
 const FREE = 'linear';
 const PRO_STYLES = STYLES.filter((s) => s !== FREE);
 
-const index = JSON.parse(readFileSync(join(DATA, 'index.json'), 'utf8')).icons.map(([name, category, tags]) => ({ name, category, tags }));
+const index = JSON.parse(readFileSync(join(DATA, 'index.json'), 'utf8')).icons.map(([name, category, tags], idx) => ({ name, category, tags, idx }));
 const linear = JSON.parse(readFileSync(join(DATA, `${FREE}.json`), 'utf8'));
 const COUNT = index.length;
 
@@ -30,6 +36,16 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const title = (n) => n.replace(/-/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
 const svg = (name, size = 24) => toSVG({ styles: { [FREE]: { nodes: linear[name] } } }, FREE, { size });
 const TODAY = new Date().toISOString().slice(0, 10);
+// One cell of a catalog sprite sheet as a CSS mask (same markup as the landing's shared/icons.js).
+const pct = (k, n) => `${n > 1 ? +((k / (n - 1)) * 100).toFixed(4) : 0}%`;
+function proPreview(icon, style) {
+  const { files, chunk, cols, rows } = SPRITES.all;
+  const layered = SPRITES.layered.includes(style), k = icon.idx % chunk;
+  const R = rows * (layered ? 2 : 1), x = pct(k % cols, cols), y = Math.floor(k / cols);
+  const vars = `--m:url(/sprites/${files[style][Math.floor(icon.idx / chunk)]});--z:${cols * 100}% ${R * 100}%;--p:${x} ${pct(y, R)}${layered ? `;--p2:${x} ${pct(y + rows, R)}` : ''}`;
+  return `<span class="ic-img${layered ? ' ic-l' : ''}" role="img" aria-label="${esc(title(icon.name))} icon, ${STYLE_INFO[style].label} style" style="${vars}"></span>`;
+}
+const NPMRC = '@nodo-icons:registry=https://nodoicons.com/npm/\n//nodoicons.com/npm/:_authToken=${NODO_LICENSE_KEY}';
 const write = (path, text) => { mkdirSync(join(path, '..'), { recursive: true }); writeFileSync(path, text); };
 const byCat = new Map();
 for (const i of index) (byCat.get(i.category) || byCat.set(i.category, []).get(i.category)).push(i);
@@ -109,17 +125,19 @@ function iconPage(icon) {
 <section>
   <h2>All styles</h2>
   <div class="styles">
-    <figure class="free">${raw}<figcaption>${STYLE_INFO[FREE].label}<b>Free</b></figcaption></figure>
-    ${PRO_STYLES.map((s) => `<a class="pro" href="${PRICING}"><img src="/png/${s}/64/${icon.name}.png" width="32" height="32" alt="${esc(t)} icon, ${STYLE_INFO[s].label} style" loading="lazy" /><figcaption>${STYLE_INFO[s].label}<b>Pro</b></figcaption></a>`).join('')}
+    <a class="free" href="/icons/?icon=${icon.name}">${raw}<figcaption>${STYLE_INFO[FREE].label}<b>Free</b></figcaption></a>
+    ${PRO_STYLES.map((s) => `<a class="pro" href="/icons/?icon=${icon.name}&amp;style=${s}">${proPreview(icon, s)}<figcaption>${STYLE_INFO[s].label}<b>Pro</b></figcaption></a>`).join('')}
   </div>
+  <p class="hint">Pro styles are shown as image previews. <a href="/icons/?icon=${icon.name}">Change size, color and stroke →</a></p>
 </section>
 <section class="code">
   <h2>Use it</h2>
-  <div class="tabs"><button class="on" data-tab="react">React</button><button data-tab="vue">Vue</button><button data-tab="svg">SVG</button></div>
+  <div class="tabs"><button class="on" data-tab="react">React</button><button data-tab="vue">Vue</button><button data-tab="svg">SVG</button><button data-tab="pro">Pro styles</button></div>
   <pre data-pane="react"><code>${esc(react)}</code></pre>
   <pre data-pane="vue" hidden><code>${esc(vue)}</code></pre>
   <pre data-pane="svg" hidden><code>${esc(raw)}</code></pre>
-  <p class="hint"><code>npm install @nodo-icons/react</code> · or ask your AI agent: <code>npx @nodo-icons/mcp</code></p>
+  <pre data-pane="pro" hidden><code>${esc(`# .npmrc — your license key in the NODO_LICENSE_KEY env variable\n${NPMRC}\n\nnpm install @nodo-icons/react-pro\n\nimport { ${comp} } from '@nodo-icons/react-pro/duotone';\n\n<${comp} size={24} />`)}</code></pre>
+  <p class="hint"><code>npm install @nodo-icons/react</code> · Pro: <a href="/docs/#nodo-icons-pro-in-react-and-vue">setup with your license key</a> · AI agents: <code>npx @nodo-icons/mcp</code></p>
 </section>
 <section>
   <h2>Related icons</h2>
@@ -168,7 +186,7 @@ ${svg(icon.name)}
 
 ## Pro styles
 
-With Nodo Icons Pro: \`import { ${comp} } from '@nodo-icons/react-pro/<style>'\`, where \`<style>\` is one of ${PRO_STYLES.join(', ')}. Pricing: ${PRICING}
+With Nodo Icons Pro: \`import { ${comp} } from '@nodo-icons/react-pro/<style>'\`, where \`<style>\` is one of ${PRO_STYLES.join(', ')}. The Pro packages install from the Nodo Icons registry with your license key: ${SITE}/docs/#nodo-icons-pro-in-react-and-vue. Pricing: ${SITE}/#pricing
 
 ## Related icons
 
@@ -208,10 +226,11 @@ if (ICONS) {
     write(join(OUT, 'icons', i.name, 'index.md'), iconMarkdown(i));
   }
   for (const [c, l] of byCat) write(join(OUT, 'icons', 'c', c, 'index.html'), categoryPage(c, l));
-  write(join(OUT, 'icons', 'index.html'), browsePage());
-  write(join(OUT, 'icons', 'index.json'), JSON.stringify(index.map((i) => [i.name, i.category, i.tags])));
-  cpSync(join(DIST, 'svg', FREE), join(OUT, 'svg', FREE), { recursive: true });
-  for (const s of PRO_STYLES) if (existsSync(join(DIST, 'png', s, '64'))) cpSync(join(DIST, 'png', s, '64'), join(OUT, 'png', s, '64'), { recursive: true });
+  if (BROWSE) {
+    write(join(OUT, 'icons', 'index.html'), browsePage());
+    write(join(OUT, 'icons', 'index.json'), JSON.stringify(index.map((i) => [i.name, i.category, i.tags])));
+  }
+  cpSync(SVG_DIR, join(OUT, 'svg', FREE), { recursive: true });
 }
 cpSync(join(import.meta.dirname, 'assets'), join(OUT, 'assets'), { recursive: true });
 // License pages (linked from the JSON-LD and from checkout) + their Markdown source.
@@ -242,7 +261,7 @@ write(join(OUT, 'docs', 'index.html'), layout({
 }));
 // Full catalogue: lets an agent pick a name and import without searching page by page.
 if (ICONS) write(join(OUT, 'catalog.json'), JSON.stringify({
-  name: 'Nodo Icons', version: JSON.parse(readFileSync(join(DIST, 'react/package.json'), 'utf8')).version, count: COUNT,
+  name: 'Nodo Icons', version: process.env.KIT_VERSION || JSON.parse(readFileSync(join(DIST, 'react/package.json'), 'utf8')).version, count: COUNT,
   styles: STYLES.map((s) => ({ style: s, tier: s === FREE ? 'free' : 'pro' })),
   packages: { react: '@nodo-icons/react', vue: '@nodo-icons/vue', static: '@nodo-icons/static', mcp: '@nodo-icons/mcp' },
   icons: index.map((i) => ({ name: i.name, component: componentName(i.name), category: i.category, tags: i.tags, svg: `${SITE}/svg/${FREE}/${i.name}.svg`, page: `${SITE}/icons/${i.name}/` })),
@@ -275,6 +294,6 @@ write(join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset
 // Every crawler may read the pages (free Linear icons, docs). Bots that collect model-training data
 // skip the Pro previews, which the Pro license keeps out of AI training (section 6.5).
 const TRAINING_BOTS = ['GPTBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended', 'CCBot', 'meta-externalagent', 'Bytespider'];
-write(join(OUT, 'robots.txt'), `${TRAINING_BOTS.map((b) => `User-agent: ${b}`).join('\n')}\nDisallow: /png/\n\nUser-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
-console.log(`✓ ${ICONS ? `${index.length} icon pages + ${byCat.size} categories + browse page` : 'site without icon pages'} in ${((Date.now() - t0) / 1000).toFixed(1)}s → ${OUT}`);
+write(join(OUT, 'robots.txt'), `${TRAINING_BOTS.map((b) => `User-agent: ${b}`).join('\n')}\nDisallow: /sprites/\nDisallow: /api/pro-preview\n\nUser-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
+console.log(`✓ ${ICONS ? `${index.length} icon pages + ${byCat.size} categories${BROWSE ? ' + browse page' : ''}` : 'site without icon pages'} in ${((Date.now() - t0) / 1000).toFixed(1)}s → ${OUT}`);
 console.log(LS_STORE ? `✓ Lemon Squeezy affiliate tracking for store "${LS_STORE}"` : '· affiliate tracking off: set LS_STORE=<store slug> once the store exists');

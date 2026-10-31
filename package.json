@@ -1,5 +1,6 @@
 {
   "name": "nodoicons",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "Nodo Icons: the free Linear style (MIT) and the source of nodoicons.com",

@@ -133,7 +133,7 @@ export default function IconDetail({ item, style: startStyle, list, all, nodes, 
             <span>{title(item.category)}</span><span className="opacity-50">›</span><span>{STYLE_INFO[style].label}</span><span className="opacity-50">›</span><b className="font-semibold text-foreground">{item.name}</b>
           </nav>
           <div className="flex gap-1.5">
-            <IconButton label="Copy link to this icon" done={done === 'link'} onClick={() => copy('link', `${location.origin}/icons/?icon=${item.name}${pro ? `&style=${style}` : ''}`)}><NdIcon name="link" className="size-[18px]" /></IconButton>
+            <IconButton label="Copy link to this icon" done={done === 'link'} onClick={() => copy('link', `${location.origin}/icons/${item.name}/`)}><NdIcon name="link" className="size-[18px]" /></IconButton>
             <IconButton label="Close (Esc)" onClick={onClose}><NdIcon name="close" className="size-[18px]" /></IconButton>
           </div>
         </div>
@@ -235,7 +235,7 @@ export default function IconDetail({ item, style: startStyle, list, all, nodes, 
           </Tabs>
           <p className="mt-2.5 text-[13px] text-muted-foreground [&_a]:text-brand">
             {pro ? <>{STYLE_INFO[style].label} is part of <a href="/#pricing">Nodo Icons Pro</a>. </> : <>Linear is free under the <a href="/license/free/">MIT license</a>. </>}
-            <a href="/docs/">Docs</a>
+            <a href={`/icons/${item.name}/`}>Icon page</a> · <a href="/docs/">Docs</a>
           </p>
         </section>
 

@@ -8,10 +8,15 @@ const ROOT = resolve(import.meta.dirname, '..');
 const OUT = join(ROOT, 'website/dist');
 rmSync(OUT, { recursive: true, force: true });
 
-// docs, licenses, legal pages, robots, sitemap, llms.txt
+// docs, licenses, legal pages, icon and category pages, robots, sitemap, llms.txt
 execFileSync(process.execPath, [join(ROOT, 'website/site/build.mjs')], {
   stdio: 'inherit',
-  env: { ...process.env, OUT_DIR: OUT, ICONS: '0', DATA_DIR: join(ROOT, 'data'), LICENSES_DIR: join(ROOT, 'licenses') },
+  env: {
+    ...process.env, OUT_DIR: OUT, DATA_DIR: join(ROOT, 'data'), LICENSES_DIR: join(ROOT, 'licenses'),
+    // one SEO page per icon (/icons/<name>/) and per category; /icons/ itself is the landing's search page
+    ICONS: '1', BROWSE: '0', SVG_DIR: join(ROOT, 'icons/linear'), SPRITES: join(ROOT, 'website/landing/data/icons.json'),
+    KIT_VERSION: JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).version,
+  },
 });
 
 // the landing becomes the home page
