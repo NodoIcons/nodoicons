@@ -1,5 +1,5 @@
 // Builds nodoicons.com into website/dist (Netlify runs this on every push).
-import { renameSync, rmSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { build } from 'vite';
@@ -17,10 +17,41 @@ execFileSync(process.execPath, [join(ROOT, 'website/site/build.mjs')], {
 // the landing becomes the home page
 await build({
   configFile: false, root: join(ROOT, 'website/landing'), base: '/', publicDir: false, logLevel: 'warn',
-  build: { outDir: OUT, emptyOutDir: false, assetsDir: 'assets/app', rollupOptions: { input: { home: join(ROOT, 'website/landing/home/index.html') } } },
+  build: {
+    outDir: OUT,
+    emptyOutDir: false,
+    assetsDir: 'assets/app',
+    manifest: true,
+    rollupOptions: {
+      input: {
+        home: join(ROOT, 'website/landing/home/index.html'),
+        analytics: join(ROOT, 'website/landing/analytics.js'),
+      },
+    },
+  },
 });
 renameSync(join(OUT, 'home/index.html'), join(OUT, 'index.html'));
 rmSync(join(OUT, 'home'), { recursive: true, force: true });
+
+// The landing is bundled by Vite; the docs and legal pages are generated as plain HTML.
+// Add the same Vercel Analytics entry to every page in the static output.
+const manifestPath = join(OUT, '.vite/manifest.json');
+const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+const analyticsEntry = Object.values(manifest).find((entry) => entry.isEntry && entry.src?.endsWith('analytics.js'));
+if (!analyticsEntry) throw new Error('Vercel Analytics entry is missing from the Vite build');
+const analyticsTag = `<script type="module" crossorigin src="/${analyticsEntry.file}"></script>`;
+function addAnalytics(dir) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) addAnalytics(path);
+    else if (entry.isFile() && entry.name.endsWith('.html')) {
+      const html = readFileSync(path, 'utf8');
+      writeFileSync(path, html.replace('</head>', `  ${analyticsTag}\n</head>`));
+    }
+  }
+}
+addAnalytics(OUT);
+rmSync(join(OUT, '.vite'), { recursive: true, force: true });
 
 writeFileSync(join(OUT, '_headers'), `/*
   X-Content-Type-Options: nosniff
