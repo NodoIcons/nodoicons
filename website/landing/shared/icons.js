@@ -2,7 +2,7 @@
 // Linear (free) is drawn with the kit's own renderer (src/render.js); the Pro styles are raster
 // previews from sprite sheets (/sprites, see scripts/sprites.mjs), used as CSS masks so they still
 // take the page colour (--tint) and, for layered styles, a second colour (--tint-2).
-import { toSVG, STYLE_INFO } from '../../../lib/render.js';
+import { toSVG, STYLE_INFO, componentName } from '../../../lib/render.js';
 import data from '../data/icons.json';
 
 export const KIT = {
@@ -12,7 +12,7 @@ export const KIT = {
   names: Object.keys(data.icons),
   variants: data.count * data.styles.length,
 };
-export { STYLE_INFO, toSVG };
+export { STYLE_INFO, toSVG, componentName };
 export const fmt = (n) => n.toLocaleString('en-US');
 
 const SP = data.sprites;
