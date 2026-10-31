@@ -1,4 +1,4 @@
-// Builds nodoicons.com into website/dist (Netlify runs this on every push).
+// Builds nodoicons.com into website/dist (Vercel runs this on every push; headers and redirects live in vercel.json).
 import { readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -52,13 +52,4 @@ function addAnalytics(dir) {
 }
 addAnalytics(OUT);
 rmSync(join(OUT, '.vite'), { recursive: true, force: true });
-
-writeFileSync(join(OUT, '_headers'), `/*
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-/*.md
-  Content-Type: text/markdown; charset=utf-8
-`);
 console.log('✓ website/dist ready');

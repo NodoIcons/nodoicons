@@ -11,6 +11,7 @@ This policy explains what personal data Nodo Icons ("we") collects on nodoicons.
 1. **Email address**, when you ask to be notified about early access or product updates. We use it only to send those messages; you can ask us to delete it at any time.
 2. **Purchase data**, when you buy a license. Payments are processed by Lemon Squeezy, our merchant of record, which collects your name, email, billing address and payment details under its own privacy policy. We receive your name, email, order and license key to deliver the product and provide support.
 3. **Messages** you send to our email addresses.
+4. **Page-view statistics**: Vercel Web Analytics counts visits to the website without cookies and without identifying individual visitors; we only see aggregate figures (pages, referrers, countries, devices).
 
 We do not use advertising trackers. If you arrive through an affiliate link, Lemon Squeezy's affiliate script records the referral so the affiliate can be credited.
 
@@ -24,4 +25,4 @@ Under the GDPR you can ask to access, correct, delete or export your data, objec
 
 ## Processors
 
-Lemon Squeezy (payments, licenses, affiliates), Hostinger (email), Netlify (website hosting). They process data on our behalf or as independent controllers under their own terms.
+Lemon Squeezy (payments, licenses, affiliates), Hostinger (email), Vercel (website hosting and web analytics). They process data on our behalf or as independent controllers under their own terms.

@@ -31,7 +31,7 @@ npm run build      # → website/dist
 npm run dev        # landing only, with hot reload
 ```
 
-Netlify builds and deploys `website/dist` on every push to `main` (`netlify.toml`).
+Vercel builds and deploys `website/dist` on every push to `main` (`vercel.json`: headers and the www → apex redirect).
 
 ## License
 
