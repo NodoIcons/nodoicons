@@ -25,12 +25,15 @@ await build({
     rollupOptions: {
       input: {
         home: join(ROOT, 'website/landing/home/index.html'),
+        icons: join(ROOT, 'website/landing/home/icons.html'),
         analytics: join(ROOT, 'website/landing/analytics.js'),
       },
     },
   },
 });
 renameSync(join(OUT, 'home/index.html'), join(OUT, 'index.html'));
+mkdirSync(join(OUT, 'icons'), { recursive: true });
+renameSync(join(OUT, 'home/icons.html'), join(OUT, 'icons/index.html')); // search page: /icons/
 
 // The landing's "browse every icon" section fetches the free Linear data (MIT) at /data/.
 mkdirSync(join(OUT, 'data'), { recursive: true });

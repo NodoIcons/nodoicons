@@ -240,9 +240,15 @@ body { background: #fff; color: var(--ink); }
 .br-tile .ic { width: 26px; height: 26px; }
 .br-tile:hover { background: #ececf0; transform: translateY(-1px); }
 .br-tile .nm { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--muted); }
-.br-tile .pro { position: absolute; top: 6px; right: 6px; }
 .br-tile.copied::after { content: 'Copied'; position: absolute; inset: 0; display: grid; place-items: center; border-radius: 14px; background: rgba(10, 132, 255, .92); color: #fff; font-size: 13px; font-weight: 600; }
 .br-empty { color: var(--muted); text-align: center; padding: 40px 0; }
 .br-foot { display: flex; justify-content: center; margin-top: 18px; }
+/* Landing version: at most one screen tall; the grid shows only the rows that fit */
+.browse.compact { height: 100vh; height: 100svh; box-sizing: border-box; display: flex; flex-direction: column; padding-top: 96px; padding-bottom: 28px; }
+.browse.compact .sec-head { margin-bottom: 24px; }
+.browse.compact .br-grid { flex: 1; min-height: 0; overflow: hidden; align-content: start; }
+.browse.compact .br-foot { margin-top: 14px; }
+/* /icons/ page */
+.browse.full { padding-top: 110px; padding-bottom: 80px; }
 .br-foot [hidden] { display: none; }
 @media (max-width: 600px) { .br-grid { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); } }
