@@ -34,6 +34,9 @@ export function icon(name, style = 'linear', { strokeWidth } = {}) {
   return toSVG(ic, 'linear', { size: 24, strokeWidth }).replace('<svg', `<svg class="ic ic-linear" aria-hidden="true" focusable="false"`);
 }
 
+/** Version tag of a Pro style's previews (its sprite hash): changes whenever the kit is rebuilt. */
+export const previewVersion = (style) => SP.show.files[style]?.split('.')[1] || '';
+
 /** Pro preview of any icon of the kit, by its position in /data/index.json (the icon browser). */
 export function catalogIcon(index, style) {
   const { files, chunk, cols, rows } = SP.all;

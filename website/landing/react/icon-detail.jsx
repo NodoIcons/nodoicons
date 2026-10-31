@@ -2,7 +2,7 @@
 // copy and download for the free Linear style, usage snippets (React, Vue, SVG, sprite, font, AI agents)
 // and more icons from the same category. Pro styles are image previews only, with an unlock link.
 import { useEffect, useRef, useState } from 'react';
-import { KIT, STYLE_INFO, componentName } from '../shared/icons.js';
+import { KIT, STYLE_INFO, componentName, previewVersion } from '../shared/icons.js';
 import { linearSVG, glyphHTML } from './glyph.js';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
@@ -64,6 +64,28 @@ function IconButton({ label, onClick, children, done }) {
   );
 }
 
+/**
+ * Big preview. Pro styles start from the 64px sprite cell and switch to a sharp 192px render from
+ * /api/pro-preview once it has loaded (on the dev server, without the API, the sprite cell stays).
+ */
+function Preview({ item, style, nodes, stroke, color }) {
+  const src = style === FREE ? '' : `/api/pro-preview?style=${style}&icon=${item.name}&v=${previewVersion(style)}`;
+  const [sharp, setSharp] = useState('');
+  useEffect(() => {
+    if (!src) return;
+    const img = new Image();
+    img.onload = () => setSharp(src);
+    img.src = src;
+    return () => { img.onload = null; };
+  }, [src]);
+  const css = { '--s': '100%', color: color || undefined };
+  if (src && sharp === src) {
+    const mask = `url("${src}") center / contain no-repeat`;
+    return <span aria-hidden="true" className="block size-24 bg-current text-foreground" style={{ ...css, mask, WebkitMask: mask }} />;
+  }
+  return <NdIcon html={glyphHTML(item, style, nodes, { stroke })} className="size-24 text-foreground" style={css} />;
+}
+
 /** Controlled by the browser: `item` is the open icon; navigation and close go back through callbacks. */
 export default function IconDetail({ item, style: startStyle, list, all, nodes, onNavigate, onClose }) {
   const [style, setStyle] = useState(startStyle);
@@ -115,7 +137,7 @@ export default function IconDetail({ item, style: startStyle, list, all, nodes, 
 
         <div className="grid grid-cols-[260px_1fr] gap-7 px-7 pt-2 max-sm:grid-cols-1 max-sm:gap-4 max-sm:px-4">
           <div className="group/stage relative grid aspect-square place-items-center rounded-[20px] bg-secondary bg-[radial-gradient(circle,rgba(0,0,0,0.07)_1px,transparent_1.2px)] bg-size-[14px_14px] max-sm:aspect-auto max-sm:h-[190px]">
-            <NdIcon html={glyphHTML(item, style, nodes, { stroke })} className="size-24 text-foreground" style={{ '--s': '100%', color: color || undefined }} />
+            <Preview item={item} style={style} nodes={nodes} stroke={stroke} color={color} />
             {['prev', 'next'].map((d) => (
               <Button key={d} variant="secondary" size="icon-sm" aria-label={d === 'prev' ? 'Previous icon' : 'Next icon'} onClick={() => step(d === 'prev' ? -1 : 1)}
                 className={`absolute top-1/2 -translate-y-1/2 rounded-full bg-white/85 opacity-0 transition-opacity group-hover/stage:opacity-100 focus-visible:opacity-100 max-sm:opacity-100 ${d === 'prev' ? 'left-2' : 'right-2'}`}>
