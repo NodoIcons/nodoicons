@@ -45,6 +45,7 @@ mkdirSync(join(OUT, 'data'), { recursive: true });
 for (const f of ['index.json', 'linear.json']) copyFileSync(join(ROOT, 'data', f), join(OUT, 'data', f));
 // Pro styles are previewed as images: WebP sprite sheets with hashed names (cached as immutable).
 cpSync(join(ROOT, 'website/landing/sprites'), join(OUT, 'sprites'), { recursive: true });
+cpSync(join(ROOT, 'website/well-known'), join(OUT, '.well-known'), { recursive: true }); // MCP registry: domain public key
 rmSync(join(OUT, 'home'), { recursive: true, force: true });
 
 // The landing is bundled by Vite; the docs and legal pages are generated as plain HTML.
