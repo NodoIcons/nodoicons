@@ -1,10 +1,10 @@
-// "Browse every icon": all 5,000 icons in the free Linear style, searchable by name or tag, with a
-// category filter and a style switcher. The nine other styles are Pro (badge on their tab) and are
-// previewed only for the showcase icons bundled with the page (the full Pro data is not public).
+// "Browse every icon": all 5,000 icons, searchable by name or tag, with a category filter and a style
+// switcher. Linear is free (MIT): drawn as SVG and copied on click. The nine other styles are Pro
+// (badge on their tab) and are shown as image previews from sprite sheets (shared/icons.js).
 // Data (/data/index.json + /data/linear.json, ~2 MB) loads when the section comes into view.
 //   compact (landing section): at most one screen tall; "See all icons" links to /icons/ with the same filters
 //   full (/icons/ page):        reads/writes the filters in the URL, "Show more" appends pages
-import { KIT, STYLE_INFO, toSVG, icon, previewable, fmt } from '../shared/icons.js';
+import { KIT, STYLE_INFO, toSVG, catalogIcon, fmt } from '../shared/icons.js';
 
 const PAGE = 240;
 const FREE = 'linear';
@@ -21,10 +21,10 @@ export function initBrowse(root, { full = false } = {}) {
 
   const matches = () => {
     const words = S.q.toLowerCase().split(/\s+/).filter(Boolean);
-    return S.icons.filter((i) => (!S.cat || i.category === S.cat) && (S.style === FREE || previewable(i.name, S.style)) && words.every((w) => i.hay.includes(w)));
+    return S.icons.filter((i) => (!S.cat || i.category === S.cat) && words.every((w) => i.hay.includes(w)));
   };
-  const glyph = (name) => (S.style === FREE ? toSVG({ styles: { linear: { nodes: S.nodes[name] } } }, FREE, { size: 24 }).replace('<svg', '<svg class="ic" aria-hidden="true"') : icon(name, S.style));
-  const tile = (i) => `<button type="button" class="br-tile" data-n="${i.name}" title="${S.style === FREE ? `${i.name} · click to copy SVG` : `${i.name} · ${STYLE_INFO[S.style].label}`}">${glyph(i.name)}<span class="nm">${esc(i.name)}</span></button>`;
+  const glyph = (i) => (S.style === FREE ? toSVG({ styles: { linear: { nodes: S.nodes[i.name] } } }, FREE, { size: 24 }).replace('<svg', '<svg class="ic" aria-hidden="true"') : catalogIcon(i.idx, S.style));
+  const tile = (i) => `<button type="button" class="br-tile" data-n="${i.name}" title="${S.style === FREE ? `${i.name} · click to copy SVG` : `${i.name} · ${STYLE_INFO[S.style].label} (Pro)`}">${glyph(i)}<span class="nm">${esc(i.name)}</span></button>`;
   const query = () => { const p = new URLSearchParams(); if (S.q) p.set('q', S.q); if (S.cat) p.set('cat', S.cat); if (S.style !== FREE) p.set('style', S.style); return p.toString(); };
 
   // compact mode: how many tiles fit in the grid's box (one screen minus the section's chrome)
@@ -51,7 +51,7 @@ export function initBrowse(root, { full = false } = {}) {
     more.textContent = full ? 'Show more' : `See all ${fmt(list.length)} icons`;
     $('#br-empty').hidden = list.length > 0;
     $('#br-count').textContent = pro
-      ? `${fmt(list.length)} ${STYLE_INFO[S.style].label} previews · all ${fmt(KIT.count)} icons in Nodo Icons Pro`
+      ? `${fmt(list.length)} of ${fmt(S.icons.length)} icons · ${STYLE_INFO[S.style].label} is a Pro style · previews shown as images`
       : `${fmt(list.length)} of ${fmt(S.icons.length)} icons · Linear is free (MIT) · click an icon to copy its SVG`;
     if (full) history.replaceState(null, '', `${location.pathname}${query() ? `?${query()}` : ''}`);
   }
@@ -75,7 +75,7 @@ export function initBrowse(root, { full = false } = {}) {
     try {
       const [index, nodes] = await Promise.all([fetch('/data/index.json').then((r) => r.json()), fetch('/data/linear.json').then((r) => r.json())]);
       S.nodes = nodes;
-      S.icons = index.icons.map(([name, category, tags]) => ({ name, category, hay: `${name.replace(/-/g, ' ')} ${tags.join(' ')} ${category}` }));
+      S.icons = index.icons.map(([name, category, tags], idx) => ({ name, category, idx, hay: `${name.replace(/-/g, ' ')} ${tags.join(' ')} ${category}` }));
       const cats = [...new Set(S.icons.map((i) => i.category))].sort();
       $('#br-cat').innerHTML = `<option value="">All categories</option>${cats.map((c) => `<option value="${c}"${c === S.cat ? ' selected' : ''}>${c[0].toUpperCase() + c.slice(1)}</option>`).join('')}`;
       render();

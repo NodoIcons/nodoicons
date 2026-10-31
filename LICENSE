@@ -4,7 +4,7 @@ Copyright (c) 2026 Nodo Icons
 
 This license covers the code in this repository and the icons in icons/linear and
 data/linear.json. It does NOT cover:
-  - website/landing/data/icons.json, which holds previews of Nodo Icons Pro styles
+  - website/landing/sprites, which holds image previews of Nodo Icons Pro styles
     used by the website (Nodo Icons Pro License Agreement, licenses/LICENSE-PRO.md);
   - the Nodo Icons name and logo.
 

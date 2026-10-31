@@ -1,5 +1,7 @@
-// Icon helpers for the landing previews. Data = landing/data/icons.json (see scripts/snapshot.mjs),
-// markup = the kit's own renderer (src/render.js), so the landing shows exactly what ships.
+// Icon helpers for the landing previews. Data = landing/data/icons.json (see scripts/snapshot.mjs).
+// Linear (free) is drawn with the kit's own renderer (src/render.js); the Pro styles are raster
+// previews from sprite sheets (/sprites, see scripts/sprites.mjs), used as CSS masks so they still
+// take the page colour (--tint) and, for layered styles, a second colour (--tint-2).
 import { toSVG, STYLE_INFO } from '../../../lib/render.js';
 import data from '../data/icons.json';
 
@@ -12,15 +14,30 @@ export const KIT = {
 };
 export { STYLE_INFO, toSVG };
 export const fmt = (n) => n.toLocaleString('en-US');
-/** True when the page bundles this icon in this style (Pro styles: showcase icons only). */
-export const previewable = (name, style) => Boolean(data.icons[name]?.styles[style]);
 
-/** <svg class="ic"> markup for one icon in one style. Size is driven by CSS (--s, default 24px). */
+const SP = data.sprites;
+const pct = (k, n) => `${n > 1 ? +((k / (n - 1)) * 100).toFixed(4) : 0}%`;
+/** One cell of a sprite sheet as a masked <span class="ic">: ::after = main layer, ::before = secondary layer. */
+function sprite(file, cols, rows, k, style) {
+  const layered = SP.layered.includes(style);
+  const R = rows * (layered ? 2 : 1), x = pct(k % cols, cols), y = Math.floor(k / cols);
+  const vars = `--m:url(/sprites/${file});--z:${cols * 100}% ${R * 100}%;--p:${x} ${pct(y, R)}${layered ? `;--p2:${x} ${pct(y + rows, R)}` : ''}`;
+  return `<span class="ic ic-${style} ic-img${layered ? ' ic-l' : ''}" aria-hidden="true" style="${vars}"></span>`;
+}
+const isPro = (style) => Boolean(SP.show.files[style]);
+
+/** Markup for one icon in one style: <svg> for Linear, a sprite preview for Pro. Size is driven by CSS (--s, default 24px). */
 export function icon(name, style = 'linear', { strokeWidth } = {}) {
   const ic = data.icons[name];
   if (!ic) return `<svg class="ic" viewBox="0 0 24 24"></svg>`;
-  const s = ic.styles[style] ? style : 'linear';
-  return toSVG(ic, s, { size: 24, strokeWidth }).replace('<svg', `<svg class="ic ic-${s}" aria-hidden="true" focusable="false"`);
+  if (isPro(style)) return sprite(SP.show.files[style], SP.show.cols, SP.show.rows, ic.i, style);
+  return toSVG(ic, 'linear', { size: 24, strokeWidth }).replace('<svg', `<svg class="ic ic-linear" aria-hidden="true" focusable="false"`);
+}
+
+/** Pro preview of any icon of the kit, by its position in /data/index.json (the icon browser). */
+export function catalogIcon(index, style) {
+  const { files, chunk, cols, rows } = SP.all;
+  return sprite(files[style][Math.floor(index / chunk)], cols, rows, index % chunk, style);
 }
 
 const styleOf = (el) => el.dataset.style || el.closest('[data-style]')?.dataset.style || 'linear';
@@ -75,13 +92,3 @@ export const BLURB = {
   contained: 'The glyph cut out of a rounded square — app-icon ready.',
   soft: 'The glyph on a 12% tinted tile. For chips, lists and empty states.',
 };
-
-/**
- * Splits an icon into its two layers, for exploded views: `secondary` = nodes drawn with opacity
- * (Duotone fill, Bulk silhouette, Twotone details, Soft tile), `primary` = everything else.
- */
-export function iconParts(name, style) {
-  const nodes = data.icons[name]?.styles[style]?.nodes || [];
-  const mk = (ns) => toSVG({ styles: { [style]: { nodes: ns } } }, style, { size: 24 }).replace('<svg', `<svg class="ic ic-${style}" aria-hidden="true" focusable="false"`);
-  return { secondary: mk(nodes.filter(([, a]) => a.opacity)), primary: mk(nodes.filter(([, a]) => !a.opacity)) };
-}

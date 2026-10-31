@@ -35,4 +35,4 @@ Vercel builds and deploys `website/dist` on every push to `main` (`vercel.json`:
 
 ## License
 
-Code and Linear icons: [MIT](LICENSE). Pro styles are not in this repository and are licensed under the [Nodo Icons Pro license](https://nodoicons.com/license/pro/). Previews of Pro styles used by the website (`website/landing/data/icons.json`) are not MIT.
+Code and Linear icons: [MIT](LICENSE). Pro styles are not in this repository and are licensed under the [Nodo Icons Pro license](https://nodoicons.com/license/pro/). Image previews of Pro styles used by the website (`website/landing/sprites`) are not MIT.

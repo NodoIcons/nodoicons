@@ -13,6 +13,14 @@
   color: var(--tint-2, inherit);
   transition: color 0.4s ease;
 }
+/* Pro previews: sprite sheet cells used as masks (shared/icons.js). ::before = secondary layer, ::after = main. */
+.ic-img { position: relative; }
+.ic-img::before, .ic-img::after {
+  content: ''; position: absolute; inset: 0; background: currentColor;
+  -webkit-mask: var(--m) var(--p) / var(--z) no-repeat; mask: var(--m) var(--p) / var(--z) no-repeat;
+}
+.ic-img::before { display: none; }
+.ic-img.ic-l::before { display: block; background: var(--tint-2, currentColor); -webkit-mask-position: var(--p2); mask-position: var(--p2); transition: background-color 0.4s ease; }
 .ic.ic-out { opacity: 0; transform: scale(0.82); }
 .ic.ic-in { opacity: 0; transform: scale(1.12); transition: none; }
 [data-ic] { display: inline-grid; place-items: center; }

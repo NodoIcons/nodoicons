@@ -1,5 +1,5 @@
 // Builds nodoicons.com into website/dist (Vercel runs this on every push; headers and redirects live in vercel.json).
-import { copyFileSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { build } from 'vite';
@@ -38,6 +38,8 @@ renameSync(join(OUT, 'home/icons.html'), join(OUT, 'icons/index.html')); // sear
 // The landing's "browse every icon" section fetches the free Linear data (MIT) at /data/.
 mkdirSync(join(OUT, 'data'), { recursive: true });
 for (const f of ['index.json', 'linear.json']) copyFileSync(join(ROOT, 'data', f), join(OUT, 'data', f));
+// Pro styles are previewed as images: WebP sprite sheets with hashed names (cached as immutable).
+cpSync(join(ROOT, 'website/landing/sprites'), join(OUT, 'sprites'), { recursive: true });
 rmSync(join(OUT, 'home'), { recursive: true, force: true });
 
 // The landing is bundled by Vite; the docs and legal pages are generated as plain HTML.
