@@ -8,12 +8,19 @@ import { Button } from '@/components/ui/button';
 import { Browse } from './browse.jsx';
 import { ShowcaseControls } from './showcase-controls.jsx';
 import { Plans, Notify } from './pricing.jsx';
+import { CodeDemo } from './code-demo.jsx';
 
 const mount = (el, node) => { const root = createRoot(el); flushSync(() => root.render(<TooltipProvider delayDuration={300}>{node}</TooltipProvider>)); return root; };
 
 export const mountBrowse = (el, opts) => mount(el, <Browse {...opts} />);
 export const mountPlans = (el, opts) => mount(el, <Plans {...opts} />);
 export const mountNotify = (el) => mount(el, <Notify />);
+
+/** Bento code tile; returns update(style) to follow the showcase's style switch. */
+export function mountCode(el, style) {
+  const root = mount(el, <CodeDemo style={style} />);
+  return (s) => root.render(<TooltipProvider><CodeDemo style={s} /></TooltipProvider>);
+}
 
 /** Returns update(patch) so the page can push the current tab / style (auto-advance). */
 export function mountShowcase(el, props) {

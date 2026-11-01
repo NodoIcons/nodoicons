@@ -1,6 +1,6 @@
 import { KIT, STYLE_INFO, fmt, icon, hydrate, swapStyle } from '../shared/icons.js';
 import { reveal, reduceMotion } from '../shared/scroll.js';
-import { mountButtons, mountBrowse, mountShowcase, mountPlans, mountNotify } from '../react/islands.jsx';
+import { mountButtons, mountBrowse, mountShowcase, mountPlans, mountNotify, mountCode } from '../react/islands.jsx';
 import { phone, desktop } from '../shared/mockups.js';
 import { dropdown, command, notifications, toolbar, toasts, glassBar, glassScene, sidebarApp, dashboard, settingsForm } from '../shared/ui.js';
 
@@ -175,6 +175,7 @@ const setStyle = (s) => {
   swapStyle(stage, s);
   swapStyle($('#bento'), s, { stagger: 4, max: 300 });
   controls({ style: s });
+  codeDemo(s);
 };
 // shadcn Tabs + ToggleGroup (react/showcase-controls.jsx)
 controls = mountShowcase($('#show-bar'), { tabs: TABS, tab: current, styles: SEG, style: 'linear', onTab: (i) => showTab(i, true), onStyle: setStyle });
@@ -188,13 +189,7 @@ $('#b-sidebar').innerHTML = `<div class="ui tl-a">${sidebarApp()}</div><div clas
 $('#b-tools').innerHTML = toolbar();
 $('#b-toasts').innerHTML = toasts();
 $('#b-glass').innerHTML = glassBar();
-$('#b-code').innerHTML = `<div class="code">
-  <div class="code-tabs mono"><span class="on">React</span><span>Vue</span><span>HTML</span></div>
-<pre><code><i class="k">import</i> { HomeIcon } <i class="k">from</i> <i class="s">'@nodo-icons/react/duotone'</i>;
-
-<i class="t">&lt;HomeIcon</i> <i class="a">size</i>={24} <i class="a">color</i>=<i class="s">"currentColor"</i> <i class="a">strokeWidth</i>={1.5} <i class="a">title</i>=<i class="s">"Home"</i> <i class="t">/&gt;</i></code></pre>
-  <div class="code-out"><span data-ic="home" data-style="duotone"></span><small class="mono">HomeIcon · duotone · 24</small></div>
-</div>`;
+const codeDemo = mountCode($('#b-code'), 'duotone'); // shadcn Tabs: React · Vue · HTML (react/code-demo.jsx)
 const FORMATS = [['file', 'SVG'], ['pen-tool', 'Outlined SVG'], ['image', 'PNG 16–512'], ['file-text', 'PDF + catalog'], ['tag', 'Icon font'], ['layers', 'SVG sprite'], ['code', 'React'], ['command', 'Vue 3'], ['database', 'icons.json']];
 $('#b-formats').innerHTML = `<div class="fmts">${FORMATS.map(([n, l]) => `<span class="fmt">${slot(n)}<b>${l}</b></span>`).join('')}</div>`;
 hydrate($('#bento'));
