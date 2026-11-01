@@ -9,9 +9,7 @@ import { NdIcon } from '@/components/nd-icon';
 
 // Checkout links: filled in once the Lemon Squeezy products are live; until then they lead to the form.
 export const CHECKOUT = { pro: '', enterprise: '' };
-// Early-access form: until an email service is connected it opens a pre-filled email to hello@nodoicons.com
-// (nothing is stored by the page). Set NOTIFY_ENDPOINT to post to a form service instead.
-const NOTIFY_ENDPOINT = '';
+// Early-access form → /api/notify (private waitlist on Vercel Blob; export with release/waitlist-export.sh).
 
 function Incl({ items, dark }) {
   return (
@@ -63,29 +61,35 @@ export function Plans({ count }) {
 
 export function Notify() {
   const [email, setEmail] = useState('');
-  const [msg, setMsg] = useState('');
+  const [trap, setTrap] = useState(''); // honeypot: hidden from people, bots fill it in
+  const [state, setState] = useState({ status: 'idle', msg: '' });
   const submit = async (e) => {
     e.preventDefault();
     const v = email.trim();
-    if (NOTIFY_ENDPOINT) {
-      try {
-        await fetch(NOTIFY_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: v }) });
-        setMsg(`Thanks — we'll write to ${v}.`); setEmail('');
-      } catch { setMsg('Something went wrong — write to hello@nodoicons.com.'); }
-      return;
+    setState({ status: 'sending', msg: '' });
+    try {
+      const r = await fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: v, company: trap }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) return setState({ status: 'error', msg: j.error || 'Something went wrong. Try again, or write to hello@nodoicons.com.' });
+      setState({ status: 'done', msg: j.already ? `You're already on the list with ${v}. We'll write when early access opens.` : `You're on the list. We'll write to ${v} when early access opens.` });
+      setEmail('');
+    } catch {
+      setState({ status: 'error', msg: 'Could not reach the server. Try again, or write to hello@nodoicons.com.' });
     }
-    location.href = `mailto:hello@nodoicons.com?subject=${encodeURIComponent('Nodo Icons early access')}&body=${encodeURIComponent(`Please notify ${v} when early access opens.`)}`;
-    setMsg('Your email app opened a message to hello@nodoicons.com — send it and you are on the list.');
   };
   return (
     <form id="notify" onSubmit={submit} className="mt-4 grid grid-cols-[1fr_minmax(240px,320px)_auto] items-center gap-3 rounded-[22px] border border-border py-[18px] pr-[18px] pl-6 max-[900px]:grid-cols-1 max-[900px]:p-[18px]">
       <div className="grid gap-0.5"><b>Early access opens soon.</b><span className="text-[15px] text-muted-foreground">Leave your email: we write once when checkout opens, and once before early access ends.</span></div>
       <label className="relative">
         <NdIcon name="mail" className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground" />
-        <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" aria-label="Email" className="h-11 rounded-full pl-10 text-[15px] md:text-[15px]" />
+        <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" aria-label="Email" autoComplete="email" className="h-11 rounded-full pl-10 text-[15px] md:text-[15px]" />
       </label>
-      <Button type="submit" size="pill">Notify me</Button>
-      {msg && <p role="status" className="col-span-full text-sm text-green-700">{msg}</p>}
+      <input type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden="true" value={trap} onChange={(e) => setTrap(e.target.value)} className="absolute -left-[9999px] h-px w-px opacity-0" />
+      <Button type="submit" size="pill" disabled={state.status === 'sending'}>{state.status === 'sending' ? 'Sending…' : 'Notify me'}</Button>
+      <p className="col-span-full text-[13px] text-muted-foreground [&_a]:underline">
+        Only emails about Nodo Icons early access and launch. Unsubscribe any time by replying. <a href="/privacy/">Privacy policy</a>
+      </p>
+      {state.msg && <p role="status" className={`col-span-full text-sm ${state.status === 'error' ? 'text-red-600' : 'text-green-700'}`}>{state.msg}</p>}
     </form>
   );
 }
