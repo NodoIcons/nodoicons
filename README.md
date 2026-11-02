@@ -12,7 +12,7 @@
 | `data/index.json` | Names, categories and search tags of every icon |
 | `data/linear.json` | Linear geometry used to render the icons |
 | `lib/render.js` | Dependency-free renderer: icon data → SVG markup |
-| `website/` | Source of nodoicons.com (landing, docs, license and legal pages) |
+| `website/` | Source of nodoicons.com: a Next.js app (landing, icon browser, one page per icon, docs, license and legal pages, API routes) |
 | `licenses/` | Free license (MIT) and the Nodo Icons Pro license |
 
 ## Use the icons
@@ -26,13 +26,14 @@ Copy any SVG from `icons/linear/`; it inherits the text color (`currentColor`). 
 ## Website
 
 ```bash
+cd website
 npm install
-npm run build      # → website/dist
-npm run dev        # landing only, with hot reload
+npm run dev        # http://localhost:3000
+npm run build      # production build
 ```
 
-Vercel builds and deploys `website/dist` on every push to `main` (`vercel.json`: headers and the www → apex redirect).
+Vercel builds and deploys the `website/` folder (project Root Directory) on every push to `main`. Headers and the www → apex redirect live in `website/vercel.json`; see [website/README.md](website/README.md).
 
 ## License
 
-Code and Linear icons: [MIT](LICENSE). Pro styles are not in this repository and are licensed under the [Nodo Icons Pro license](https://nodoicons.com/license/pro/). Image previews of Pro styles used by the website (`website/landing/sprites`) are not MIT.
+Code and Linear icons: [MIT](LICENSE). Pro styles are not in this repository and are licensed under the [Nodo Icons Pro license](https://nodoicons.com/license/pro/). Image previews of Pro styles used by the website (`website/public/sprites`) are not MIT.

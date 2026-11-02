@@ -1,3 +1,7 @@
 node_modules/
-website/dist/
 .DS_Store
+website/.next/
+website/.vercel/
+website/*.tsbuildinfo
+website/.env*
+!website/.env.example
